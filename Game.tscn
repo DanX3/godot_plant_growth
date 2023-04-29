@@ -1,0 +1,125 @@
+[gd_scene load_steps=9 format=3 uid="uid://pq512vdai1wy"]
+
+[ext_resource type="Texture2D" uid="uid://ckop3n6opjla" path="res://background.png" id="1_kjgp4"]
+[ext_resource type="PackedScene" uid="uid://r4s7ifm1d6ig" path="res://Branch/branch.tscn" id="1_ydn6p"]
+[ext_resource type="Script" path="res://GrowTool.gd" id="3_i0stp"]
+[ext_resource type="Texture2D" uid="uid://dnjq8enui8wd8" path="res://cursor.png" id="3_ve7yp"]
+[ext_resource type="Texture2D" uid="uid://n3odrv1wy0g0" path="res://arrow.png" id="4_nnbxu"]
+
+[sub_resource type="Animation" id="Animation_nmmkh"]
+resource_name = "Idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cursor2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.25, 1.25)]
+}
+
+[sub_resource type="Animation" id="Animation_cysby"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cursor2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1o220"]
+_data = {
+"Idle": SubResource("Animation_nmmkh"),
+"RESET": SubResource("Animation_cysby")
+}
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_left = -62.0
+offset_top = -26.0
+offset_right = 1218.0
+offset_bottom = 694.0
+texture = ExtResource("1_kjgp4")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(575, 322)
+
+[node name="Branch" parent="." groups=["plant"] instance=ExtResource("1_ydn6p")]
+position = Vector2(576, 590)
+width = 20.0
+default_color = Color(0.619608, 0.580392, 0.027451, 1)
+branch_scene = ExtResource("1_ydn6p")
+grow_on_ready = true
+
+[node name="Control" type="HBoxContainer" parent="."]
+offset_right = 1150.0
+offset_bottom = 57.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Button" type="Button" parent="Control"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "Grow Plant"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GrowTool" type="Node2D" parent="."]
+script = ExtResource("3_i0stp")
+branch_scene = ExtResource("1_ydn6p")
+
+[node name="CursorUI" type="Control" parent="GrowTool"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Cursor2" type="TextureRect" parent="GrowTool/CursorUI"]
+modulate = Color(0.807843, 0.443137, 0.192157, 1)
+layout_mode = 0
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+pivot_offset = Vector2(32, 32)
+mouse_filter = 2
+texture = ExtResource("3_ve7yp")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GrowTool/CursorUI"]
+autoplay = "Idle"
+libraries = {
+"": SubResource("AnimationLibrary_1o220")
+}
+
+[node name="Arrow" type="Control" parent="GrowTool"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Arrow" type="TextureRect" parent="GrowTool/Arrow"]
+modulate = Color(0.788235, 0.439216, 0.196078, 1)
+layout_mode = 0
+offset_top = -24.0
+offset_right = 112.0
+offset_bottom = 24.0
+pivot_offset = Vector2(0, 24)
+mouse_filter = 2
+texture = ExtResource("4_nnbxu")
+
+[connection signal="pressed" from="Control/Button" to="GrowTool" method="_on_button_pressed"]

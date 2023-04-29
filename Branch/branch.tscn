@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://r4s7ifm1d6ig"]
+
+[ext_resource type="Script" path="res://Branch/Branch.gd" id="1_vs5yf"]
+
+[sub_resource type="Curve" id="Curve_oasav"]
+_data = [Vector2(0, 0.990909), 0.0, 0.0, 0, 0, Vector2(1, 0.172727), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_6swwc"]
+colors = PackedColorArray(0.494118, 0.145098, 0.32549, 1, 0, 0.529412, 0.317647, 1)
+
+[sub_resource type="Animation" id="Animation_xq6bs"]
+resource_name = "Grow"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(-2, 1),
+"update": 0,
+"values": [0.0, 32.0]
+}
+
+[sub_resource type="Animation" id="Animation_ctreu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [32.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dkfwi"]
+_data = {
+"Grow": SubResource("Animation_xq6bs"),
+"RESET": SubResource("Animation_ctreu")
+}
+
+[node name="Branch" type="Line2D"]
+points = PackedVector2Array(7, -16, 46, -98, 98, -175, 150, -219, 217, -262, 290, -299, 389, -332)
+width = 32.0
+width_curve = SubResource("Curve_oasav")
+default_color = Color(0.207843, 0.462745, 0.0980392, 1)
+gradient = SubResource("Gradient_6swwc")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+script = ExtResource("1_vs5yf")
+points_count = 32
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Grow"
+libraries = {
+"": SubResource("AnimationLibrary_dkfwi")
+}
